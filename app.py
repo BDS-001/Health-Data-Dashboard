@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import canLifeExpectancy
 
 testData = {
     'id': [0,1,2,3,4],
@@ -10,8 +11,8 @@ testData = {
 
 df = pd.DataFrame(testData)
 
-st.write('Patient Data')
-st.dataframe(df)
+st.write('Life Expectancy')
+st.dataframe(canLifeExpectancy.getData())
 
 high_bp = df[df['blood_pressure'] > 130]
 st.write("Patients with BP > 130:")
