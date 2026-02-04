@@ -17,9 +17,6 @@ class HealthcareSpending:
         self._gov_spending = None
 
     def _fetch(self, indicator_key):
-        if indicator_key not in self.INDICATORS:
-            raise ValueError(f"Invalid indicator: {indicator_key}")
-        
         if getattr(self, f"_{indicator_key}") is None:
             url = f'https://ghoapi.azureedge.net/api/{self.INDICATORS[indicator_key]}'
             response = requests.get(url).json()
