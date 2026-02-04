@@ -4,54 +4,63 @@ import pandas as pd
 class LifeExpectancy:
     _all_data = None
 
-    def __init__(self, country_code='CAN'):
-        self.country_code = country_code
+    def __init__(self, country='Canada'):
+        self.country = country
 
     @classmethod
     def _fetch_all(cls):
         if cls._all_data is None:
             url = 'https://ghoapi.azureedge.net/api/WHOSIS_000001'
             response = requests.get(url).json()
-            cls._all_data = pd.DataFrame(response['value']).dropna(axis=1, how='all')
+            df = pd.DataFrame(response['value']).dropna(axis=1, how='all')
+
+            country_url = 'https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues'
+            country_response = requests.get(country_url).json()
+            code_to_name = {item['Code']: item['Title'] for item in country_response['value']}
+
+            df['SpatialDim'] = df['SpatialDim'].map(code_to_name)
+            df = df.dropna(subset=['SpatialDim'])
+            df = df.rename(columns={
+                'SpatialDim': 'Country',
+                'TimeDim': 'Year',
+                'NumericValue': 'Life Expectancy',
+                'Dim1': 'Sex'
+            })
+
+            cls._all_data = df
         return cls._all_data
 
     @classmethod
     def get_countries(cls):
-        """Fetch available countries with names"""
-        url = 'https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues'
-        response = requests.get(url).json()
-        all_countries = {item['Code']: item['Title'] for item in response['value']}
-
-        codes = cls._fetch_all()['SpatialDim'].unique()
-
-        return {all_countries[code]: code for code in codes if code in all_countries}
+        df = cls._fetch_all()
+        return sorted(list(df['Country'].unique()))
 
     def get_male(self):
         df = self._fetch_all()
         result = df.loc[
-            (df['SpatialDim'] == self.country_code) & (df['Dim1'] == 'SEX_MLE'),
-            ['TimeDim', 'NumericValue']
+            (df['Country'] == self.country) & (df['Sex'] == 'SEX_MLE'),
+            ['Year', 'Life Expectancy']
         ]
-        return result.sort_values(by='TimeDim').rename(columns={'TimeDim': 'Year', 'NumericValue': 'Life Expectancy'})
+        return result.sort_values(by='Year')
 
     def get_female(self):
         df = self._fetch_all()
         result = df.loc[
-            (df['SpatialDim'] == self.country_code) & (df['Dim1'] == 'SEX_FMLE'),
-            ['TimeDim', 'NumericValue']
+            (df['Country'] == self.country) & (df['Sex'] == 'SEX_FMLE'),
+            ['Year', 'Life Expectancy']
         ]
-        return result.sort_values(by='TimeDim').rename(columns={'TimeDim': 'Year', 'NumericValue': 'Life Expectancy'})
+        return result.sort_values(by='Year')
 
     @classmethod
     def get_years(cls):
         df = cls._fetch_all()
-        return sorted(df['TimeDim'].unique())
+        return sorted(df['Year'].unique())
 
     @classmethod
     def get_by_year(cls, year):
         df = cls._fetch_all()
         result = df.loc[
-            (df['Dim1'] == 'SEX_BTSX') & (df['TimeDim'] == year),
-            ['SpatialDim', 'NumericValue']
+            (df['Sex'] == 'SEX_BTSX') & (df['Year'] == year),
+            ['Country', 'Life Expectancy']
         ]
-        return result.sort_values(by='NumericValue', ascending=False).rename(columns={'SpatialDim': 'Country', 'NumericValue': 'Life Expectancy'})
+        return result.sort_values(by='Life Expectancy', ascending=False)

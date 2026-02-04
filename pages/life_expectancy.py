@@ -5,11 +5,10 @@ from data.life_expectancy import LifeExpectancy
 st.title('Life Expectancy')
 
 countries = LifeExpectancy.get_countries()
-country_list = list(countries.keys())
-default_index = country_list.index('Canada') if 'Canada' in country_list else 0
-country = st.selectbox('Select Country', country_list, index=default_index)
+default_index = countries.index('Canada') if 'Canada' in countries else 0
+country = st.selectbox('Select Country', countries, index=default_index)
 
-data = LifeExpectancy(countries[country])
+data = LifeExpectancy(country)
 
 male_data = data.get_male()
 female_data = data.get_female()
@@ -32,9 +31,10 @@ st.divider()
 st.header('Life Expectancy by Country')
 
 years = LifeExpectancy.get_years()
-year = st.selectbox('Select Year', years, index=0)
+year = st.selectbox('Select Year', years, index=len(years)-1)
 
 year_data = LifeExpectancy.get_by_year(year)
+
 
 fig_year = px.bar(year_data, x='Country', y='Life Expectancy', title=f'Life Expectancy by Country ({year})')
 fig_year.update_yaxes(range=[year_data['Life Expectancy'].min() - 10, year_data['Life Expectancy'].max() + 5])
