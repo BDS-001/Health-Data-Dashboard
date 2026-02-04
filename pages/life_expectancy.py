@@ -18,13 +18,13 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.header('Male')
-    fig_male = px.line(male_data, x='TimeDim', y='NumericValue', title='Male Life Expectancy')
+    fig_male = px.line(male_data, x='Year', y='Life Expectancy', title='Male Life Expectancy')
     st.plotly_chart(fig_male, width='stretch')
     st.dataframe(male_data)
 
 with col2:
     st.header('Female')
-    fig_female = px.line(female_data, x='TimeDim', y='NumericValue', title='Female Life Expectancy')
+    fig_female = px.line(female_data, x='Year', y='Life Expectancy', title='Female Life Expectancy')
     st.plotly_chart(fig_female, width='stretch')
     st.dataframe(female_data)
 
@@ -36,7 +36,7 @@ year = st.selectbox('Select Year', years, index=0)
 
 year_data = LifeExpectancy.get_by_year(year)
 
-fig_year = px.bar(year_data, x='SpatialDim', y='NumericValue', title=f'Life Expectancy by Country ({year})')
-fig_year.update_yaxes(range=[year_data['NumericValue'].min() - 10, year_data['NumericValue'].max() + 5])
+fig_year = px.bar(year_data, x='Country', y='Life Expectancy', title=f'Life Expectancy by Country ({year})')
+fig_year.update_yaxes(range=[year_data['Life Expectancy'].min() - 10, year_data['Life Expectancy'].max() + 5])
 st.plotly_chart(fig_year, width='stretch')
 st.dataframe(year_data)

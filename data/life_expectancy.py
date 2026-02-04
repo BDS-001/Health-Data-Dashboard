@@ -32,7 +32,7 @@ class LifeExpectancy:
             (df['SpatialDim'] == self.country_code) & (df['Dim1'] == 'SEX_MLE'),
             ['TimeDim', 'NumericValue']
         ]
-        return result.sort_values(by='TimeDim')
+        return result.sort_values(by='TimeDim').rename(columns={'TimeDim': 'Year', 'NumericValue': 'Life Expectancy'})
 
     def get_female(self):
         df = self._fetch_all()
@@ -40,7 +40,7 @@ class LifeExpectancy:
             (df['SpatialDim'] == self.country_code) & (df['Dim1'] == 'SEX_FMLE'),
             ['TimeDim', 'NumericValue']
         ]
-        return result.sort_values(by='TimeDim')
+        return result.sort_values(by='TimeDim').rename(columns={'TimeDim': 'Year', 'NumericValue': 'Life Expectancy'})
 
     @classmethod
     def get_years(cls):
@@ -54,4 +54,4 @@ class LifeExpectancy:
             (df['Dim1'] == 'SEX_BTSX') & (df['TimeDim'] == year),
             ['SpatialDim', 'NumericValue']
         ]
-        return result.sort_values(by='NumericValue', ascending=False)
+        return result.sort_values(by='NumericValue', ascending=False).rename(columns={'SpatialDim': 'Country', 'NumericValue': 'Life Expectancy'})
