@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from data.countries import COUNTRY_CODES
 
 class LifeExpectancy:
     _all_data = None
@@ -14,11 +15,7 @@ class LifeExpectancy:
             response = requests.get(url).json()
             df = pd.DataFrame(response['value']).dropna(axis=1, how='all')
 
-            country_url = 'https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues'
-            country_response = requests.get(country_url).json()
-            code_to_name = {item['Code']: item['Title'] for item in country_response['value']}
-
-            df['SpatialDim'] = df['SpatialDim'].map(code_to_name)
+            df['SpatialDim'] = df['SpatialDim'].map(COUNTRY_CODES)
             df = df.dropna(subset=['SpatialDim'])
             df = df.rename(columns={
                 'SpatialDim': 'Country',
