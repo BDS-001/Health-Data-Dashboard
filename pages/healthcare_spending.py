@@ -3,6 +3,7 @@ import plotly.express as px
 import pandas as pd
 from data.healthcare_spending import HealthcareSpending
 from data.life_expectancy import LifeExpectancy
+from utils.charts import add_trendline
 
 st.title('Healthcare Spending')
 
@@ -23,6 +24,7 @@ with col1:
     combined = pd.merge(per_capita_data, life_exp_data, on='Year')
     fig = px.scatter(combined, x='Life Expectancy', y='Spending', text='Year')
     fig.update_traces(textposition='top center')
+    add_trendline(fig, combined['Life Expectancy'], combined['Spending'])
     st.plotly_chart(fig, width='stretch')
 
 with col2:
@@ -32,6 +34,7 @@ with col2:
     combined = pd.merge(gdp_data, life_exp_data, on='Year')
     fig = px.scatter(combined, x='Life Expectancy', y='Spending', text='Year')
     fig.update_traces(textposition='top center')
+    add_trendline(fig, combined['Life Expectancy'], combined['Spending'])
     st.plotly_chart(fig, width='stretch')
 
 with col3:
@@ -41,6 +44,7 @@ with col3:
     combined = pd.merge(out_of_pocket_data, life_exp_data, on='Year')
     fig = px.scatter(combined, x='Life Expectancy', y='Spending', text='Year')
     fig.update_traces(textposition='top center')
+    add_trendline(fig, combined['Life Expectancy'], combined['Spending'])
     st.plotly_chart(fig, width='stretch')
 
 with col4:
@@ -50,4 +54,5 @@ with col4:
     combined = pd.merge(gov_data, life_exp_data, on='Year')
     fig = px.scatter(combined, x='Life Expectancy', y='Spending', text='Year')
     fig.update_traces(textposition='top center')
+    add_trendline(fig, combined['Life Expectancy'], combined['Spending'])
     st.plotly_chart(fig, width='stretch')
