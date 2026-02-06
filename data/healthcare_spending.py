@@ -30,7 +30,7 @@ class HealthcareSpending:
             df = df.rename(columns={
                 'SpatialDim': 'Country',
                 'TimeDim': 'Year',
-                'NumericValue': 'Value'
+                'NumericValue': 'Spending'
             })
 
             setattr(cls, f'_{indicator_key}', df)
@@ -38,20 +38,20 @@ class HealthcareSpending:
 
     def get_spending_per_capita(self):
         df = self._fetch('spending_per_capita')
-        result = df.loc[df['Country'] == self.country, ['Year', 'Value']]
+        result = df.loc[df['Country'] == self.country, ['Year', 'Spending']]
         return result.sort_values(by='Year')
 
     def get_spending_gdp(self):
         df = self._fetch('spending_gdp')
-        result = df.loc[df['Country'] == self.country, ['Year', 'Value']]
+        result = df.loc[df['Country'] == self.country, ['Year', 'Spending']]
         return result.sort_values(by='Year')
 
     def get_out_of_pocket(self):
         df = self._fetch('out_of_pocket')
-        result = df.loc[df['Country'] == self.country, ['Year', 'Value']]
+        result = df.loc[df['Country'] == self.country, ['Year', 'Spending']]
         return result.sort_values(by='Year')
 
     def get_gov_spending(self):
         df = self._fetch('gov_spending')
-        result = df.loc[df['Country'] == self.country, ['Year', 'Value']]
+        result = df.loc[df['Country'] == self.country, ['Year', 'Spending']]
         return result.sort_values(by='Year')

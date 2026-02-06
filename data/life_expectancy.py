@@ -48,6 +48,14 @@ class LifeExpectancy:
         ]
         return result.sort_values(by='Year')
 
+    def get_both(self):
+        df = self._fetch_all()
+        result = df.loc[
+            (df['Country'] == self.country) & (df['Sex'] == 'SEX_BTSX'),
+            ['Year', 'Life Expectancy']
+        ]
+        return result.sort_values(by='Year')
+
     @classmethod
     def get_years(cls):
         df = cls._fetch_all()
