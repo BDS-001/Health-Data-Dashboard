@@ -17,12 +17,4 @@ def add_trendline(fig, x, y):
         showlegend=False
     )
 
-    fig.add_annotation(
-        x=0.02, y=0.98,
-        xref='paper', yref='paper',
-        text=f'Correlation={r:.2f}',
-        showarrow=False,
-        font=dict(size=12, color='white'),
-        borderpad=4
-    )
-    return fig
+    return fig, r
